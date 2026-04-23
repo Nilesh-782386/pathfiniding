@@ -6,7 +6,7 @@ from bfs_algorithm import bfs
 from dfs_algorithm import dfs
 from astar_algorithm import astar
 from greedy_best_first import greedy_best_first
-from best_first import best_first
+from bidirectional_search import bidirectional_search
 from comparison import compare_algorithms
 
 app = Flask(__name__)
@@ -48,8 +48,8 @@ def route():
     elif algo == "greedy":
         path, visited = greedy_best_first(grid, start, goal)
 
-    elif algo == "best":
-        path, visited = best_first(grid, start, goal)
+    elif algo == "bidirectional":
+        path, visited = bidirectional_search(grid, start, goal)
 
     else:
         path, visited = [], []

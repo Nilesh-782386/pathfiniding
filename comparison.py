@@ -4,18 +4,18 @@ from bfs_algorithm import bfs
 from dfs_algorithm import dfs
 from astar_algorithm import astar
 from greedy_best_first import greedy_best_first
-from best_first import best_first
+from bidirectional_search import bidirectional_search
 
 def compare_algorithms(grid,start,goal):
 
     results=[]
 
     algorithms=[
-        ("BFS",bfs),
-        ("DFS",dfs),
-        ("A*",astar),
-        ("Greedy Best First",greedy_best_first),
-        ("Best First",best_first)
+        ("BFS", bfs),
+        ("DFS", dfs),
+        ("A*", astar),
+        ("Greedy Best First", greedy_best_first),
+        ("Bidirectional Search", bidirectional_search)
     ]
 
     for name,algo in algorithms:

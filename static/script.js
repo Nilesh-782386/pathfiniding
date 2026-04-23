@@ -70,11 +70,11 @@ function drawGoalIcon(x, y) {
 
 function getAlgoColor(algo) {
   const map = {
-    bfs:    "#00cfff",
-    dfs:    "#bf5fff",
-    astar:  "#00cfff",
-    greedy: "#ff9f0a",
-    best:   "#e67e22"
+    bfs:           "#00cfff",
+    dfs:           "#bf5fff",
+    astar:         "#00cfff",
+    bidirectional: "#8e44ad",
+    greedy:        "#ff9f0a"
   }
   return map[algo] || "#95a5a6"
 }

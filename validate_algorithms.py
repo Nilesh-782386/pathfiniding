@@ -2,7 +2,7 @@ from bfs_algorithm import bfs
 from dfs_algorithm import dfs
 from astar_algorithm import astar
 from greedy_best_first import greedy_best_first
-from best_first import best_first
+from bidirectional_search import bidirectional_search
 
 
 grid = [
@@ -18,8 +18,8 @@ algos = [
     ("bfs", bfs),
     ("dfs", dfs),
     ("astar", astar),
+    ("bidirectional", bidirectional_search),
     ("greedy", greedy_best_first),
-    ("best", best_first),
 ]
 
 for name, fn in algos:
