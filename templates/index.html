@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>AI Intelligent Route Finder</title>
+
+<link rel="stylesheet" href="/static/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="scanlines"></div>
+
+<div class="container">
+
+  <header>
+    <div class="header-tag">// AI PATHFINDING SYSTEM v2.0</div>
+    <h1>NEURAL<span class="accent">PATH</span></h1>
+    <div class="header-sub">INTELLIGENT ROUTE FINDER &mdash; ONLINE</div>
+    <div class="status-bar">
+      <span class="status-dot"></span>
+      <span id="statusText">SYSTEM READY</span>
+    </div>
+  </header>
+
+  <div class="controls">
+
+    <div class="panel-group">
+      <div class="panel-label">// GRID</div>
+      <button class="btn btn-cyan" onclick="generateGrid()">&#11041; GENERATE</button>
+      <button class="btn btn-red" onclick="resetSelection()">&#8634; RESET</button>
+    </div>
+
+    <div class="panel-group">
+      <div class="panel-label">// ALGORITHM</div>
+      <select id="algo" class="cyber-select">
+        <option value="astar">A* Search</option>
+        <option value="bfs">Breadth First Search</option>
+        <option value="dfs">Depth First Search</option>
+        <option value="greedy">Greedy Best First Search</option>
+        <option value="best">Best First Search</option>
+      </select>
+    </div>
+
+    <div class="panel-group">
+      <div class="panel-label">// SPEED &nbsp;<span id="speedLabel" class="accent">3x</span></div>
+      <div class="slider-row">
+        <span class="slider-cap">SLOW</span>
+        <input type="range" id="speedSlider" min="1" max="5" value="3" class="cyber-slider"
+               oninput="updateSpeed(this.value)">
+        <span class="slider-cap">FAST</span>
+      </div>
+    </div>
+
+    <div class="panel-group">
+      <div class="panel-label">// EXECUTE</div>
+      <button class="btn btn-green" onclick="findRoute()">&#9654; FIND ROUTE</button>
+    </div>
+
+  </div>
+
+  <!-- LIVE NODE COUNTER -->
+  <div class="live-stats">
+    <div class="stat-box">
+      <div class="stat-label">NODES EXPLORED</div>
+      <div class="stat-value" id="nodesExplored">0</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-box">
+      <div class="stat-label">PATH LENGTH</div>
+      <div class="stat-value" id="pathLength">0</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-box">
+      <div class="stat-label">PHASE</div>
+      <div class="stat-value" id="currentPhase">IDLE</div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="dot" style="background:#ff2d55"></span>OBSTACLE</div>
+    <div class="legend-item"><span class="dot" style="background:#ff9f0a"></span>HIGH COST</div>
+    <div class="legend-item"><span class="dot" style="background:#00cfff"></span>EXPLORED</div>
+    <div class="legend-item"><span class="dot" style="background:#39ff14"></span>OPTIMAL PATH</div>
+    <div class="legend-item legend-start"><span class="dot dot-start"></span><span class="legend-label">START</span></div>
+    <div class="legend-item legend-goal"><span class="dot dot-goal"></span><span class="legend-label">GOAL</span></div>
+  </div>
+
+  <div class="canvas-wrapper">
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+    <canvas id="gridCanvas"></canvas>
+  </div>
+
+  <h2>// ALGORITHM PERFORMANCE MATRIX</h2>
+
+  <table id="resultTable">
+    <thead>
+      <tr>
+        <th>ALGORITHM</th>
+        <th>PATH LENGTH</th>
+        <th>EXEC TIME (s)</th>
+        <th>RATING</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+</div>
+
+<script src="/static/script.js"></script>
+<script>window.onload = generateGrid;</script>
+
+</body>
+</html>
