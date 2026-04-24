@@ -179,6 +179,34 @@ function redrawMarkers() {
   if (goal)  drawCell(goal[0],  goal[1],  null, false, 'goal');
 }
 
+function drawRocket(x, y, angle) {
+  const cx = y * cell + cell / 2;
+  const cy = x * cell + cell / 2;
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angle);
+  
+  // Exhaust Flame
+  ctx.fillStyle = "#ff4500";
+  ctx.beginPath();
+  ctx.moveTo(-cell * 0.3, 0);
+  ctx.lineTo(-cell * 0.7, -cell * 0.2);
+  ctx.lineTo(-cell * 0.7, cell * 0.2);
+  ctx.closePath();
+  ctx.fill();
+
+  // Rocket Body
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath();
+  ctx.moveTo(cell * 0.5, 0);
+  ctx.lineTo(-cell * 0.3, -cell * 0.3);
+  ctx.lineTo(-cell * 0.3, cell * 0.3);
+  ctx.closePath();
+  ctx.fill();
+  
+  ctx.restore();
+}
+
 // Canvas click
 canvas.addEventListener("click", function(e) {
   const x = Math.floor(e.offsetY / cell)
@@ -222,13 +250,31 @@ async function animateSearch(visited, path, color) {
   setPhase("TRACING", "var(--green)")
 
   for (let i = 0; i < path.length; i++) {
-    const p = path[i]
-    drawCell(p[0], p[1], "#39ff14", true)
+    const curr = path[i];
+    
+    // Draw the permanent path trail
+    drawCell(curr[0], curr[1], "#39ff14", true);
+
+    // Calculate orientation for the rocket
+    let angle = 0;
+    if (i > 0) {
+      const prev = path[i - 1];
+      angle = Math.atan2(curr[0] - prev[0], curr[1] - prev[1]);
+    } else if (path.length > 1) {
+      const next = path[i + 1];
+      angle = Math.atan2(next[0] - curr[0], next[1] - curr[1]);
+    }
+
+    // Draw rocket at current position
+    drawRocket(curr[0], curr[1], angle);
 
     // Update path length live
     setPathLength(i + 1)
 
     await delay(pathDelay)
+
+    // Clean up rocket for next frame (keep path trail)
+    drawCell(curr[0], curr[1], "#39ff14", true);
   }
 
   redrawMarkers()
