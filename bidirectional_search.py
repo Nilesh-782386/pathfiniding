@@ -1,7 +1,14 @@
 from collections import deque
+from typing import List, Tuple, Dict, Set, Optional, Generator
 
-
-def bidirectional_search(grid, start, goal):
+def bidirectional_search(grid: List[List[int]], start: Tuple[int, int], goal: Tuple[int, int]):
+    """
+    Performs Bidirectional BFS on a grid.
+    Returns the path from start to goal and the order in which nodes were visited.
+    """
+    if not grid or not grid[0]:
+        return [], []
+        
     rows = len(grid)
     cols = len(grid[0])
 
@@ -16,21 +23,21 @@ def bidirectional_search(grid, start, goal):
     start_queue = deque([start])
     goal_queue = deque([goal])
 
-    start_parent = {start: None}
-    goal_parent = {goal: None}
+    start_parent: Dict[Tuple[int, int], Optional[Tuple[int, int]]] = {start: None}
+    goal_parent: Dict[Tuple[int, int], Optional[Tuple[int, int]]] = {goal: None}
 
-    start_visited = {start}
-    goal_visited = {goal}
+    start_visited: Set[Tuple[int, int]] = {start}
+    goal_visited: Set[Tuple[int, int]] = {goal}
 
-    visited_order = []
-    meeting_node = None
+    visited_order: List[Tuple[int, int]] = []
+    meeting_node: Optional[Tuple[int, int]] = None
 
-    def neighbors(node):
-        x, y = node
-        for dx, dy in directions:
-            nx, ny = x + dx, y + dy
-            if 0 <= nx < rows and 0 <= ny < cols and grid[nx][ny] != -1:
-                yield (nx, ny)
+    def get_neighbors(node: Tuple[int, int]) -> Generator[Tuple[int, int], None, None]:
+        r, c = node
+        for dr, dc in directions:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] != -1:
+                yield (nr, nc)
 
     while start_queue and goal_queue and meeting_node is None:
         # Expand from the start side.
@@ -38,7 +45,7 @@ def bidirectional_search(grid, start, goal):
             current = start_queue.popleft()
             visited_order.append(current)
 
-            for neighbor in neighbors(current):
+            for neighbor in get_neighbors(current):
                 if neighbor in start_visited:
                     continue
 
@@ -60,7 +67,7 @@ def bidirectional_search(grid, start, goal):
             current = goal_queue.popleft()
             visited_order.append(current)
 
-            for neighbor in neighbors(current):
+            for neighbor in get_neighbors(current):
                 if neighbor in goal_visited:
                     continue
 
@@ -78,18 +85,18 @@ def bidirectional_search(grid, start, goal):
         return [], visited_order
 
     # Reconstruct path from start to meeting node.
-    path_start = []
-    node = meeting_node
-    while node is not None:
-        path_start.append(node)
-        node = start_parent[node]
+    path_start: List[Tuple[int, int]] = []
+    curr: Optional[Tuple[int, int]] = meeting_node
+    while curr is not None:
+        path_start.append(curr)
+        curr = start_parent[curr]
     path_start.reverse()
 
     # Reconstruct path from meeting node to goal.
-    path_goal = []
-    node = goal_parent[meeting_node]
-    while node is not None:
-        path_goal.append(node)
-        node = goal_parent[node]
+    path_goal: List[Tuple[int, int]] = []
+    curr = goal_parent[meeting_node]
+    while curr is not None:
+        path_goal.append(curr)
+        curr = goal_parent[curr]
 
     return path_start + path_goal, visited_order

@@ -1,9 +1,19 @@
 import heapq
+from typing import List, Tuple, Dict, Set
 
-def heuristic(a,b):
+def heuristic(a: Tuple[int, int], b: Tuple[int, int]) -> int:
+    """Calculates the Manhattan distance between two points."""
     return abs(a[0]-b[0]) + abs(a[1]-b[1])
 
-def astar(grid,start,goal):
+def astar(grid: List[List[int]], start: Tuple[int, int], goal: Tuple[int, int]):
+    """
+    Performs A* Search on a grid.
+    Returns the path from start to goal and the order in which nodes were visited.
+    """
+    if not grid or not grid[0]:
+        return [], []
+    if grid[start[0]][start[1]] == -1 or grid[goal[0]][goal[1]] == -1:
+        return [], []
 
     rows=len(grid)
     cols=len(grid[0])
@@ -11,19 +21,17 @@ def astar(grid,start,goal):
     open_set=[]
     heapq.heappush(open_set,(0,start))
 
-    parent={}
-    cost={start:0}
+    parent: Dict[Tuple[int, int], Tuple[int, int]] = {}
+    cost: Dict[Tuple[int, int], float] = {start: 0}
 
-    visited_order=[]
-    visited_set=set()          # FIX: track finalized nodes to skip stale heap entries
+    visited_order: List[Tuple[int, int]] = []
+    visited_set: Set[Tuple[int, int]] = set()
 
     directions=[(1,0),(-1,0),(0,1),(0,-1)]
 
     while open_set:
-
         _,current=heapq.heappop(open_set)
 
-        # FIX: skip if already finalized (stale duplicate in heap)
         if current in visited_set:
             continue
 
@@ -34,33 +42,25 @@ def astar(grid,start,goal):
             break
 
         for d in directions:
+            r = current[0] + d[0]
+            c = current[1] + d[1]
 
-            nx=current[0]+d[0]
-            ny=current[1]+d[1]
-
-            if 0<=nx<rows and 0<=ny<cols:
-
-                if grid[nx][ny]==-1:
+            if 0 <= r < rows and 0 <= c < cols:
+                if grid[r][c] == -1:
                     continue
 
-                # FIX: skip already finalized neighbors
-                if (nx,ny) in visited_set:
+                if (r, c) in visited_set:
                     continue
 
-                new_cost=cost[current]+grid[nx][ny]
+                new_cost = cost[current] + grid[r][c]
 
-                if (nx,ny) not in cost or new_cost<cost[(nx,ny)]:
+                if (r, c) not in cost or new_cost < cost[(r, c)]:
+                    cost[(r, c)] = new_cost
+                    priority = new_cost + heuristic((r, c), goal)
+                    heapq.heappush(open_set, (priority, (r, c)))
+                    parent[(r, c)] = current
 
-                    cost[(nx,ny)]=new_cost
-
-                    priority=new_cost+heuristic((nx,ny),goal)  # FIX: heuristic(node, goal) not heuristic(goal, node) — same result but semantically correct
-
-                    heapq.heappush(open_set,(priority,(nx,ny)))
-
-                    parent[(nx,ny)]=current
-
-
-    path=[]
+    path: List[Tuple[int, int]] = []
     node=goal
 
     while node in parent:

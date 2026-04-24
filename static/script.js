@@ -276,7 +276,7 @@ function updateTable(results) {
   tbody.innerHTML = ""
 
   const lengths = results.map(r => r.length).filter(l => l > 0)
-  const minLen  = Math.min(...lengths)
+  const minLen = Math.min(...lengths)
 
   results.forEach(r => {
     let ratingClass = "rating-avg";
@@ -302,7 +302,6 @@ function updateTable(results) {
         <td>${r.length || "—"}</td>
         <td>${r.time}s</td>
         <td class="${ratingClass}">${ratingText}</td>
-
       </tr>`;
   });
 }
